@@ -1,4 +1,4 @@
-function footer() {
+function Footer() {
   return (
     <div>
         <div className='bg-gray-200 w-full text-center py-3 absolute bottom-0'>
@@ -11,4 +11,4 @@ function footer() {
   )
 }
 
-export default footer
+export default Footer
