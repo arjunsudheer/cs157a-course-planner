@@ -56,7 +56,7 @@ cd backend
 mvn spring-boot:run
 ```
 
-To stop the PostgreSQL DMBS:
+To stop the PostgreSQL DBMS:
 
 ```
 sudo service postgresql stop
