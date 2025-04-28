@@ -22,28 +22,23 @@ const CourseInfo = ({
 
 			{/* Display Course ID information */}
 			<p className='m-1'>
-				<span className='bold underline'>Course ID:</span> <span> </span>
-				{courseID}
+				<span className='bold underline'>Course ID:</span> {courseID}
 			</p>
 			{/* Display Professor Name information */}
 			<p className='m-1'>
-				<span className='bold underline'>Professor:</span> <span> </span>
-				{professorName}
+				<span className='bold underline'>Professor:</span> {professorName}
 			</p>
 			{/* Display Number of Seats Open information */}
 			<p className='m-1'>
-				<span className='bold underline'>Number of Seats Open:</span> <span> </span>
-				{seatsOpen}
+				<span className='bold underline'>Number of Seats Open:</span> {seatsOpen}
 			</p>
 			{/* Display the terms this course of offered */}
 			<p className='m-1'>
-				<span className='bold underline'>Terms Offered:</span> <span> </span>
-				{termsOffered.join(", ")}
+				<span className='bold underline'>Terms Offered:</span> {termsOffered}
 			</p>
 			{/* Display the days of the week the class is held */}
 			<p className='m-1'>
-				<span className='bold underline'>Days offered:</span> <span> </span>
-				{daysOfWeek.join(", ")}
+				<span className='bold underline'>Days offered:</span> {daysOfWeek}
 			</p>
 		</div>
 	);

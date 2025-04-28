@@ -1,5 +1,6 @@
 import CourseInfo from "./course_information/course_info";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 interface Courses {
 	courseID: number;
@@ -17,30 +18,18 @@ const AllCourses = () => {
 	const [filteredCourses, setFilteredCourses] = useState<Courses[]>([]);
 
 	useEffect(() => {
-		let engr_course: Courses = {
-			courseID: 100,
-			courseName: "ENGR Reports",
-			professorName: "Bob",
-			seatsOpen: 10,
-			termsOffered: ["Spring", "Fall"],
-			daysOfWeek: ["Monday", "Wednesday"],
+		const fetchCourses = async () => {
+			try {
+				const response = await axios.get("http://localhost:8080/courses");
+				setCourses(response.data);
+				setFilteredCourses(response.data);
+			} catch (error) {
+				console.error("Error fetching courses:", error);
+			}
 		};
 
-		setFilteredCourses([engr_course]);
+		fetchCourses();
 	}, []);
-
-	// useEffect(() => {
-	// 	const fetchCourses = async () => {
-	// 		try {
-	// 			const response = await axios.get("http://127.0.0.1:5000/courses/");
-	// 			setCourses(response.data);
-	// 		} catch (err) {
-	// 			setError("Failed to fetch courses");
-	// 		}
-	// 	};
-
-	// 	fetchCourses();
-	// }, []);
 
 	return (
 		<>
@@ -52,6 +41,7 @@ const AllCourses = () => {
 				{filteredCourses.length > 0 ? (
 					filteredCourses.map((course) => (
 						<CourseInfo
+							key={course.courseID}
 							courseID={course.courseID}
 							courseName={course.courseName}
 							professorName={course.professorName}
