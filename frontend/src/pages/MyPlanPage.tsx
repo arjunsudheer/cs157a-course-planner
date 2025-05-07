@@ -12,7 +12,7 @@ type DayOption =
   | "Thursday"
   | "Friday";
 
-const SearchPage: React.FC = () => {
+const MyPlanPage: React.FC = () => { // Renamed component
   const [currentQuery, setCurrentQuery] = useState("");
   // State for filters
   const [gradeFilter, setGradeFilter] = useState<GradeOption>("all");
@@ -54,7 +54,10 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Search Courses</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">My Course Plan & Search</h1> {/* Updated heading */}
+      {/* TODO: Add actual plan display here eventually */}
+      
+      <h2 className="text-xl font-semibold mt-6 mb-3 text-center">Add Courses to Plan</h2>
       <SearchBar onSearchChange={handleSearchChange} />
       {/* Render Filters component */}
       <Filters
@@ -80,8 +83,13 @@ const SearchPage: React.FC = () => {
           {/* Placeholder for results */}
         </div>
       )}
+      {/* Placeholder for displaying the user's actual plan items */}
+      <div className="mt-8 border-t pt-4">
+        <h2 className="text-xl font-semibold mb-3 text-center">My Current Plan</h2>
+        <p className="text-center text-gray-500">(Plan display will go here)</p>
+      </div>
     </div>
   );
 };
 
-export default SearchPage;
+export default MyPlanPage; // Export renamed component

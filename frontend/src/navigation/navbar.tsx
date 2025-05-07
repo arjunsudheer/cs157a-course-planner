@@ -93,19 +93,6 @@ const Navbar = () => {
           </span>
           <hr className="block md:hidden" />
         </NavLink>
-        {/* Link to Search page */}
-        <NavLink
-          to="/search"
-          className={({ isActive }) => (isActive ? "font-bold" : "font-normal")}
-        >
-          <span
-            className="py-3 md:cursor-pointer md:hover:underline"
-            onClick={() => setNavbarShow("none")}
-          >
-            Search
-          </span>
-          <hr className="block md:hidden" />
-        </NavLink>
       </nav>
     </>
   );
