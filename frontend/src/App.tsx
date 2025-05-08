@@ -3,7 +3,7 @@ import Footer from "./navigation/footer";
 import Navbar from "./navigation/navbar";
 import AllCourses from "./all_courses";
 import Home from "./home";
-import SearchPage from "./pages/SearchPage";
+import MyPlanPage from "./pages/MyPlanPage";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<AllCourses />} />
-          <Route path="/search" element={<SearchPage />} />
+          <Route path="/plan" element={<MyPlanPage />} />
         </Routes>
       </BrowserRouter>
       <Footer />
