@@ -32,41 +32,74 @@ const MyPlanPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [plannedCourses, setPlannedCourses] = useState<Course[]>([]);
   const [isPlanLoaded, setIsPlanLoaded] = useState(false);
+  const [loggedInStudentId, setLoggedInStudentId] = useState<string | null>(
+    null
+  );
 
-  const studentId = 1; // DUMMY ID
+  useEffect(() => {
+    const storedStudentId = localStorage.getItem("studentID");
+    if (storedStudentId) {
+      setLoggedInStudentId(storedStudentId);
+    } else {
+      console.warn(
+        "No studentID found in localStorage. User might not be logged in."
+      );
+      
+    }
+  }, []); 
 
-  // effect that allows us to load the initial plan from the backend
+  // effect that allows us to load the initial plan from the backend when loggedInStudentId is set
   useEffect(() => {
     const fetchInitialPlan = async () => {
+      if (!loggedInStudentId) return; 
+
+      setIsPlanLoaded(false); 
       try {
         const response = await axios.get<Course[]>(
-          `http://localhost:8080/students/${studentId}/plan`
+          `http://localhost:8080/students/${loggedInStudentId}/plan`
         );
         setPlannedCourses(response.data);
-        console.log("Initial plan loaded:", response.data);
+        console.log(
+          `Initial plan loaded for student ${loggedInStudentId}:`,
+          response.data
+        );
       } catch (error) {
-        console.error("Error fetching initial plan:", error);
+        console.error(
+          `Error fetching initial plan for student ${loggedInStudentId}:`,
+          error
+        );
+        setPlannedCourses([]);
       } finally {
         setIsPlanLoaded(true);
       }
     };
 
-    fetchInitialPlan();
-  }, [studentId]);
+    if (loggedInStudentId) {
+      fetchInitialPlan();
+    }
+  }, [loggedInStudentId]); 
 
   const updateBackendPlan = async (currentPlan: Course[]) => {
+    if (!loggedInStudentId) {
+      console.error("Cannot update plan, no student ID available.");
+      return;
+    }
+
     const payload = currentPlan.map((course) => ({
       courseID: course.courseID,
-      term: course.termsOffered,
-      isRetaking: false,
+      term: course.termsOffered, 
+      isRetaking: false, 
     }));
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/students/${studentId}/plan`,
+        `http://localhost:8080/students/${loggedInStudentId}/plan`,
         payload
       );
-      console.log("Plan updated on backend:", response.data);
+      console.log(
+        `Plan updated on backend for student ${loggedInStudentId}:`,
+        response.data
+      );
     } catch (error) {
       let errorMessage =
         "Error updating plan on backend. See console for details.";
@@ -77,17 +110,19 @@ const MyPlanPage: React.FC = () => {
       } else if (error instanceof Error) {
         errorMessage = `Error updating plan: ${error.message}`;
       }
-      console.error("Error updating plan on backend:", error);
+      console.error(
+        `Error updating plan on backend for student ${loggedInStudentId}:`,
+        error
+      );
       console.error(errorMessage);
     }
   };
 
   useEffect(() => {
-    if (isPlanLoaded) {
-      // run this when planned courses change
+    if (isPlanLoaded && loggedInStudentId) {
       updateBackendPlan(plannedCourses);
     }
-  }, [plannedCourses, isPlanLoaded]);
+  }, [plannedCourses, isPlanLoaded, loggedInStudentId]);
 
   useEffect(() => {
     const fetchSearchResults = async () => {

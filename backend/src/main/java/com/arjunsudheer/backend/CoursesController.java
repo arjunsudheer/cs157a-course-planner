@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.arjunsudheer.backend.Course;
 
 import java.util.List;
+import java.util.Map; // Added for login response
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,14 @@ class PlannedCourseData {
     public void setTerm(String term) { this.term = term; }
     public boolean getIsRetaking() { return isRetaking; }
     public void setIsRetaking(boolean isRetaking) { this.isRetaking = isRetaking; }
+}
+
+// Class for the login request payload
+class LoginRequest {
+    private String studentID;
+
+    public String getStudentID() { return studentID; }
+    public void setStudentID(String studentID) { this.studentID = studentID; }
 }
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -316,6 +325,44 @@ public class CoursesController {
         } catch (SQLException e) {
             System.out.println("Unable to create Courses table");
             e.printStackTrace();
+        }
+    }
+
+    // Endpoint for student login
+    @CrossOrigin(origins = "http://localhost:5173") 
+    @PostMapping("/api/auth/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        if (this.conn == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database connection error.");
+        }
+        String studentIdStr = loginRequest.getStudentID();
+        if (studentIdStr == null || studentIdStr.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student ID is required.");
+        }
+        int studentId;
+        try {
+            studentId = Integer.parseInt(studentIdStr);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Student ID format. It must be a number.");
+        }
+
+        String sql = "SELECT StudentID FROM Students WHERE StudentID = ?";
+
+        try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
+            pstmt.setInt(1, studentId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Student found!!!
+                return ResponseEntity.ok("Login successful");
+            } else {
+                // Student not found
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Student ID not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error during login for StudentID " + studentIdStr + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during login: " + e.getMessage());
         }
     }
 
