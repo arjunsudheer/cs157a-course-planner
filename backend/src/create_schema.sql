@@ -1,3 +1,34 @@
+-- Use transactions to ensure that Students Table does not have incomplete starting data
+BEGIN;
+    -- Create Students table
+    CREATE TABLE Students (
+        -- Use SERIAL keyword in PostgreSQL DB to make auto-incremented integer value
+        StudentID SERIAL PRIMARY KEY,
+        Nickname VARCHAR(100) NOT NULL,
+        StudentName VARCHAR(100) NOT NULL,
+        Year VARCHAR(9) NOT NULL
+    );
+
+    -- Insert 15 rows of initial data into Students table
+    INSERT INTO Students(StudentName, Nickname, Year) VALUES 
+        ('Bob', 'Bob', 'Freshman'),
+        ('Tom', 'Tom', 'Freshman'),
+        ('Jeff', 'Jeff', 'Freshman'),
+        ('Billy', 'Billy', 'Freshman'),
+        ('Sarah', 'Sarah', 'Sophomore'),
+        ('Grace', 'Grace', 'Sophomore'),
+        ('Becky', 'Becky', 'Sophomore'),
+        ('Linda', 'Linda', 'Sophomore'),
+        ('Timmy', 'Tim', 'Junior'),
+        ('Tyler', 'Ty', 'Junior'),
+        ('Melinda', 'Mel', 'Junior'),
+        ('Aditya', 'Adi', 'Senior'),
+        ('Arnav', 'Arnav', 'Senior'),
+        ('Pranav', 'Pranav', 'Senior'),
+        ('Ethan', 'Ethan', 'Senior');
+
+COMMIT;
+
 -- Use transactions to ensure that Course Table does not have incomplete starting data
 BEGIN;
     -- Create Courses table if it doesn't exist
@@ -31,38 +62,6 @@ BEGIN;
         ('Computer Architecture', 'Dr. Singh', 3, 18, 'All', 'Friday');
 
 COMMIT;
-
-
--- Use transactions to ensure that Students Table does not have incomplete starting data
-BEGIN;
-    -- Create Students table
-    CREATE TABLE Students (
-        -- Use SERIAL keyword in PostgreSQL DB to make auto-incremented integer value
-        StudentID SERIAL PRIMARY KEY,
-        StudentName VARCHAR(100) NOT NULL,
-        Year VARCHAR(100) NOT NULL
-    );
-
-    -- Insert 15 rows of initial data into Students table
-    INSERT INTO Students(StudentName, Year) VALUES 
-        ('Bob', 'Freshman'),
-        ('Tom', 'Freshman'),
-        ('Jeff', 'Freshman'),
-        ('Billy', 'Freshman'),
-        ('Sarah', 'Sophomore'),
-        ('Grace', 'Sophomore'),
-        ('Becky', 'Sophomore'),
-        ('Linda', 'Sophomore'),
-        ('Timmy', 'Junior'),
-        ('Tyler', 'Junior'),
-        ('Melinda', 'Junior'),
-        ('Aditya', 'Senior'),
-        ('Arnav', 'Senior'),
-        ('Pranav', 'Senior'),
-        ('Ethan', 'Senior');
-
-COMMIT;
-
 
 -- Use transactions to ensure that PlannedEnrollments Table does not have incomplete starting data
 BEGIN;
