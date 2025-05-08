@@ -57,10 +57,10 @@ sudo service postgresql start
 
 ### Setting up the tables and initial data
 
-The provided create_schema.sql will create the required tables and insert some initial data. To run this script, type the following command in your terminal:
+The provided create_schema.sql (located in the src directory) will create the required tables and insert some initial data. To run this script, type the following command in your terminal:
 
 ```
-psql -h localhost -p 5432 -U student -d courseplanner -a -f create_schema.sql
+psql -h localhost -p 5432 -U student -d courseplanner -a -f src/create_schema.sql
 ```
 
 To verify that the tables were created, you can enter the psql interactive shell:
@@ -109,7 +109,8 @@ cd frontend
 npm run dev
 ```
 
-For MAC: 
+For MAC:
+
 ## Database Setup
 
 ```
@@ -122,6 +123,7 @@ Confirm your installation:
 ```
 psql --version
 ```
+
 ```
 psql --version
 ```
