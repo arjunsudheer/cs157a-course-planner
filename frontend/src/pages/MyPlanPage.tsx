@@ -3,15 +3,14 @@ import axios from "axios";
 import SearchBar from "../search_tools/search";
 import Filters from "../search_tools/filters";
 
-// Define the Course interface (assuming similar to AllCourses.tsx)
 interface Course {
   courseID: number;
   courseName: string;
   professorName: string;
-  units: number; // Added units based on your CourseController
+  units: number;
   seatsOpen: number;
-  termsOffered: string; // In backend it's a single string, might need adjustment if frontend expects array
-  daysOfWeek: string; // In backend it's a single string, might need adjustment
+  termsOffered: string;
+  daysOfWeek: string;
 }
 
 type GradeOption = "all" | "graded" | "ungraded";
@@ -29,25 +28,81 @@ const MyPlanPage: React.FC = () => {
   const [gradeFilter, setGradeFilter] = useState<GradeOption>("all");
   const [termFilter, setTermFilter] = useState<TermOption>("all");
   const [dayFilter, setDayFilter] = useState<DayOption>("all");
-  const [searchResults, setSearchResults] = useState<Course[]>([]); // State for search results
-  const [isLoading, setIsLoading] = useState(false); // Optional: for loading state
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [plannedCourses, setPlannedCourses] = useState<Course[]>([]);
+  const [isPlanLoaded, setIsPlanLoaded] = useState(false);
+
+  const studentId = 1; // DUMMY ID
+
+  // effect that allows us to load the initial plan from the backend
+  useEffect(() => {
+    const fetchInitialPlan = async () => {
+      try {
+        const response = await axios.get<Course[]>(
+          `http://localhost:8080/students/${studentId}/plan`
+        );
+        setPlannedCourses(response.data);
+        console.log("Initial plan loaded:", response.data);
+      } catch (error) {
+        console.error("Error fetching initial plan:", error);
+      } finally {
+        setIsPlanLoaded(true);
+      }
+    };
+
+    fetchInitialPlan();
+  }, [studentId]);
+
+  const updateBackendPlan = async (currentPlan: Course[]) => {
+    const payload = currentPlan.map((course) => ({
+      courseID: course.courseID,
+      term: course.termsOffered,
+      isRetaking: false,
+    }));
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/students/${studentId}/plan`,
+        payload
+      );
+      console.log("Plan updated on backend:", response.data);
+    } catch (error) {
+      let errorMessage =
+        "Error updating plan on backend. See console for details.";
+      if (axios.isAxiosError(error) && error.response) {
+        errorMessage = `Error updating plan: ${
+          error.response.data || error.message
+        }`;
+      } else if (error instanceof Error) {
+        errorMessage = `Error updating plan: ${error.message}`;
+      }
+      console.error("Error updating plan on backend:", error);
+      console.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    if (isPlanLoaded) {
+      // run this when planned courses change
+      updateBackendPlan(plannedCourses);
+    }
+  }, [plannedCourses, isPlanLoaded]);
 
   useEffect(() => {
     const fetchSearchResults = async () => {
-
       if (
         !currentQuery &&
         gradeFilter === "all" &&
         termFilter === "all" &&
         dayFilter === "all"
       ) {
-        setSearchResults([]); 
+        setSearchResults([]);
         return;
       }
 
       setIsLoading(true);
       try {
-        // Construct query parameters
         const params = new URLSearchParams();
         if (currentQuery) params.append("nameOrProfessor", currentQuery);
         if (gradeFilter !== "all") params.append("grade", gradeFilter);
@@ -61,16 +116,17 @@ const MyPlanPage: React.FC = () => {
         setSearchResults(response.data);
       } catch (error) {
         console.error("Error fetching search results:", error);
-        setSearchResults([]); // Clear results on error
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     const timerId = setTimeout(() => {
       fetchSearchResults();
-    }, 500); 
+    }, 500);
 
-    return () => clearTimeout(timerId); // Cleanup timeout
+    return () => clearTimeout(timerId);
   }, [currentQuery, gradeFilter, termFilter, dayFilter]);
 
   const handleSearchChange = (query: string) => {
@@ -87,6 +143,20 @@ const MyPlanPage: React.FC = () => {
 
   const handleDayChange = (value: DayOption) => {
     setDayFilter(value);
+  };
+
+  const handleAddCourseToPlan = (courseToAdd: Course) => {
+    if (
+      !plannedCourses.find((course) => course.courseID === courseToAdd.courseID)
+    ) {
+      setPlannedCourses((prevCourses) => [...prevCourses, courseToAdd]);
+    }
+  };
+
+  const handleRemoveCourseFromPlan = (courseIdToRemove: number) => {
+    setPlannedCourses((prevCourses) =>
+      prevCourses.filter((course) => course.courseID !== courseIdToRemove)
+    );
   };
 
   return (
@@ -122,8 +192,6 @@ const MyPlanPage: React.FC = () => {
         ) : searchResults.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {searchResults.map((course) => (
-              // Assuming you have a CourseInfo component or similar
-              // For now, just displaying basic info
               <div
                 key={course.courseID}
                 className="border p-4 rounded-lg shadow"
@@ -134,6 +202,12 @@ const MyPlanPage: React.FC = () => {
                 <p>Seats Open: {course.seatsOpen}</p>
                 <p>Terms: {course.termsOffered}</p>
                 <p>Days: {course.daysOfWeek}</p>
+                <button
+                  onClick={() => handleAddCourseToPlan(course)}
+                  className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm"
+                >
+                  + Add to Plan
+                </button>
               </div>
             ))}
           </div>
@@ -148,7 +222,30 @@ const MyPlanPage: React.FC = () => {
         <h2 className="text-xl font-semibold mb-3 text-center">
           My Current Plan
         </h2>
-        <p className="text-center text-gray-500">(Plan display will go here)</p>
+        {plannedCourses.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            {plannedCourses.map((course) => (
+              <div
+                key={`plan-${course.courseID}`}
+                className="border p-4 rounded-lg shadow bg-green-50"
+              >
+                <h4 className="font-bold">{course.courseName}</h4>
+                <p>Professor: {course.professorName}</p>
+                <p>Units: {course.units}</p>
+                <button
+                  onClick={() => handleRemoveCourseFromPlan(course.courseID)}
+                  className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">
+            Your plan is empty. Add courses from the search results above.
+          </p>
+        )}
       </div>
     </div>
   );
