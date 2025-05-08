@@ -1,6 +1,6 @@
 # cs157a-course-planner
 
-This repository is dedicated to our CS 157A Database Management Systems class project.
+This repository is dedicated to our CS 157A Database Management Systems class project. This guide assumes you have Ubuntu Linux installed.
 
 ## Database Setup
 
@@ -43,20 +43,58 @@ To exit the psql interactive shell, type _\q_.
 
 ## Running the backend
 
-First start the PostgreSQL DBMS:
+All the backend files are located within the backend directory. Navigate to the backend directory by executing the following command in your terminal:
+
+```
+cd backend
+```
+
+Start the PostgreSQL DBMS:
 
 ```
 sudo service postgresql start
 ```
 
+### Setting up the tables and initial data
+
+The provided create_schema.sql will create the required tables and insert some initial data. To run this script, type the following command in your terminal:
+
+```
+psql -h localhost -p 5432 -U student -d courseplanner -a -f create_schema.sql
+```
+
+To verify that the tables were created, you can enter the psql interactive shell:
+
+```
+sudo -u postgres psql
+```
+
+To view the tables in the courseplanner database, type the following commands into the psql interactive shell:
+
+```
+\c courseplanner
+\dt
+```
+
+The first command will select the courseplanner database. The second command will list all tables that exist in the selected database.
+
+After verifying that the tables were created, exit the psql interactive shell by typing the following command into the psql interactive shell:
+
+```
+\q
+```
+
+### Starting the SpringBoot backend server
+
 For our backend we use a Spring Boot project with Maven. You can start running the backend by running the following commands in your terminal:
 
 ```
-cd backend
 mvn spring-boot:run
 ```
 
-To stop the PostgreSQL DBMS:
+### Stopping the PostgreSQL DBMS
+
+When you are ready to stop running the backend, you can stop the PostgreSQL DBMS by running the following command in your terminal window:
 
 ```
 sudo service postgresql stop
