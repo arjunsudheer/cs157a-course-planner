@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -105,6 +106,57 @@ public class BackendApplicationTests {
 				.param("studentID", "0")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"courseName\":\"Test Course\",\"professorName\":\"Test Prof\",\"units\":5,\"seatsOpen\":10,\"termsOffered\":\"All\",\"daysOfWeek\":\"Monday\"}"))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	public void testMyPlanEndpoints() throws Exception {
+		// Test getting student plan
+		mockMvc.perform(get("/plan/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray());
+
+		// Test getting student grades
+		mockMvc.perform(get("/grades/1"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray());
+
+		// Test adding course to plan
+		mockMvc.perform(post("/plan/add/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"courseID\": 1, \"term\": \"Fall\", \"isRetaking\": false}"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Plan saved successfully")));
+
+		// Test removing course from plan
+		mockMvc.perform(post("/plan/remove/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"courseID\": 1, \"term\": \"Fall\"}"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Plan saved successfully")));
+
+		// Test adding grades
+		mockMvc.perform(post("/grades/add/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"courseID\": 1, \"term\": \"Fall\", \"grade\": \"A\"}"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Plan saved successfully")));
+
+		// Test invalid student ID
+		mockMvc.perform(get("/plan/999"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$").isArray());
+
+		// Test invalid course ID
+		mockMvc.perform(post("/plan/add/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"courseID\": 999, \"term\": \"Fall\", \"isRetaking\": false}"))
+				.andExpect(status().isInternalServerError());
+
+		// Test invalid grade
+		mockMvc.perform(post("/grades/add/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("{\"courseID\": 1, \"term\": \"Fall\", \"grade\": \"Invalid\"}"))
 				.andExpect(status().isInternalServerError());
 	}
 }
