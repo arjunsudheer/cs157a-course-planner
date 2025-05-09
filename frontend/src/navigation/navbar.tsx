@@ -1,12 +1,18 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classNames from "classnames";
 
 const Navbar = () => {
   // Maintains the state of the navbar (shown vs. hidden)
   const [navbarShow, setNavbarShow] = useState("none");
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const adminStatus = localStorage.getItem("isAdmin") === "true";
+    setIsAdmin(adminStatus);
+  }, []);
 
   // Hides and shows the navbar in mobile view
   const toggleNavbar = () => {
@@ -27,6 +33,8 @@ const Navbar = () => {
         return "My Plan";
       case "/courses":
         return "All Courses";
+      case "/admin":
+        return "Admin";
       default:
         return "Course Planner";
     }
@@ -80,7 +88,7 @@ const Navbar = () => {
           </span>
           <hr className="block md:hidden" />
         </NavLink>
-        {/* Linke to All Courses page */}
+        {/* Link to All Courses page */}
         <NavLink
           to="/courses"
           className={({ isActive }) => (isActive ? "font-bold" : "font-normal")}
@@ -93,6 +101,21 @@ const Navbar = () => {
           </span>
           <hr className="block md:hidden" />
         </NavLink>
+        {/* Link to Admin page (only shown for admin users) */}
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) => (isActive ? "font-bold" : "font-normal")}
+          >
+            <span
+              className="py-3 md:cursor-pointer md:hover:underline"
+              onClick={() => setNavbarShow("none")}
+            >
+              Admin
+            </span>
+            <hr className="block md:hidden" />
+          </NavLink>
+        )}
       </nav>
     </>
   );

@@ -22,7 +22,9 @@ const Home = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         localStorage.setItem("studentID", studentID);
+        localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
         navigate("/courses");
       } else {
         const errorData = await response.json().catch(() => ({

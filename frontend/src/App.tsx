@@ -4,6 +4,7 @@ import Navbar from "./navigation/navbar";
 import AllCourses from "./all_courses";
 import Home from "./home";
 import MyPlanPage from "./pages/MyPlanPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/courses" element={<AllCourses />} />
           <Route path="/plan" element={<MyPlanPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
       <Footer />
