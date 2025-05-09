@@ -140,7 +140,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database connection error.");
         }
 
-        String sql = "INSERT INTO Courses (CourseName, ProfessorName, Units, SeatsOpen, TermsOffered, DaysOfWeek) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Courses (CourseName, ProfessorName, Units, SeatsOpen, TermOffered, DayOfWeek) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, courseData.getCourseName());
@@ -231,7 +231,7 @@ public class AdminController {
         // Check if the ID already exists
         try (PreparedStatement checkStmt = this.conn
                 .prepareStatement("SELECT StudentID FROM Students WHERE StudentID = ?")) {
-            checkStmt.setString(1, studentData.getStudentID());
+            checkStmt.setInt(1, Integer.parseInt(studentData.getStudentID()));
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student ID already exists");
@@ -244,7 +244,7 @@ public class AdminController {
         String sql = "INSERT INTO Students (StudentID, StudentName, Year) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setString(1, studentData.getStudentID().trim());
+            pstmt.setInt(1, Integer.parseInt(studentData.getStudentID().trim()));
             pstmt.setString(2, studentData.getStudentName().trim());
             pstmt.setString(3, studentData.getYear().trim());
 
@@ -286,7 +286,7 @@ public class AdminController {
         String sql = "DELETE FROM Students WHERE StudentID = ?";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setInt(1, studentId);
+            pstmt.setInt(1, Integer.parseInt(studentID));
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 return ResponseEntity.ok(Map.of(
@@ -344,7 +344,8 @@ public class AdminController {
         }
 
         List<Map<String, Object>> students = new ArrayList<>();
-        String sql = "SELECT * FROM Students WHERE StudentID ILIKE ? OR StudentName ILIKE ? ORDER BY StudentID";
+        // Cast StudentID from Integer to String as expected by ILIKE
+        String sql = "SELECT * FROM Students WHERE StudentID::text ILIKE ? OR StudentName ILIKE ? ORDER BY StudentID";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
             String searchPattern = "%" + query.trim() + "%";
@@ -384,7 +385,8 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Search query is required");
         }
 
-        String sql = "DELETE FROM Students WHERE StudentID ILIKE ? OR StudentName ILIKE ?";
+        // Cast StudentID from Integer to String as expected by ILIKE
+        String sql = "DELETE FROM Students WHERE StudentID::text ILIKE ? OR StudentName ILIKE ?";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
             String searchPattern = "%" + query.trim() + "%";
@@ -405,5 +407,4 @@ public class AdminController {
                     .body("Error deleting students: " + e.getMessage());
         }
     }
-
 }

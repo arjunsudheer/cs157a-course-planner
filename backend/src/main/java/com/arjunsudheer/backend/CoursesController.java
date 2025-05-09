@@ -116,13 +116,12 @@ public class CoursesController {
                         rs.getString("ProfessorName"),
                         rs.getInt("Units"),
                         rs.getInt("SeatsOpen"),
-                        rs.getString("TermsOffered"),
-                        rs.getString("DaysOfWeek"));
+                        rs.getString("TermOffered"),
+                        rs.getString("DayOfWeek"));
                 courses.add(course);
             }
 
             return courses;
-
         } catch (SQLException e) {
             System.out.println("Unable to retrieve all courses information.");
             return new ArrayList<Course>();
