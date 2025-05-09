@@ -106,6 +106,7 @@ For our frontend we use React. Please create a new terminal window so your can r
 
 ```
 cd frontend
+npm install
 npm run dev
 ```
 
