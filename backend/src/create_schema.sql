@@ -10,6 +10,10 @@ BEGIN;
         Year VARCHAR(9) NOT NULL CHECK (Year IN ('Freshman', 'Sophomore', 'Junior', 'Senior'))
     );
 
+    -- Insert the admin user
+    INSERT INTO Students VALUES
+        (0, 'Admin', 'Admin', 'Senior');
+
     -- Insert 15 rows of initial data into Students table
     INSERT INTO Students(StudentName, Nickname, Year) VALUES 
         ('Bob', 'Bob', 'Freshman'),
@@ -43,13 +47,13 @@ BEGIN;
         -- Should be less than 100 and positive
         SeatsOpen INTEGER NOT NULL CHECK (SeatsOpen > 0 AND SeatsOpen <= 100),
         -- Can only be "All", "Spring", "Fall", "Winter", or "Summer"
-        TermsOffered VARCHAR(6) NOT NULL CHECK ( TermsOffered IN ('All', 'Spring', 'Fall', 'Winter', 'Summer')) ,
+        TermOffered VARCHAR(6) NOT NULL CHECK ( TermOffered IN ('All', 'Spring', 'Fall', 'Winter', 'Summer')) ,
         -- Can only be on weekdays
-        DaysOfWeek VARCHAR(9) NOT NULL CHECK (DaysOfWeek IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'))
+        DayOfWeek VARCHAR(9) NOT NULL CHECK (DayOfWeek IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'))
     );
 
     -- Insert 15 rows of initial data into Courses table
-    INSERT INTO Courses(CourseName, ProfessorName, Units, SeatsOpen, TermsOffered, DaysOfWeek) VALUES
+    INSERT INTO Courses(CourseName, ProfessorName, Units, SeatsOpen, TermOffered, DayOfWeek) VALUES
         ('Introduction to Programming', 'Dr. Smith', 3, 10, 'All', 'Monday'),
         ('Introduction to Engineering', 'Dr. Bob', 3, 15, 'All', 'Tuesday'),
         ('Calculus 3', 'Dr. Jeff', 3, 20, 'All', 'Wednesday'),
