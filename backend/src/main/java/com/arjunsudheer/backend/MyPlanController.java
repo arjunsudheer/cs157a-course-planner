@@ -170,6 +170,8 @@ public class MyPlanController {
 
         // Create query to use with PreparedStatements for efficiency
         String insertSql = "INSERT INTO PlannedEnrollments VALUES (?, ?, ?, ?)";
+        // Create query to add 1 seat to number of seats open in Courses table
+        String decrementSeatsOpen = "UPDATE Courses SET SeatsOpen = SeatsOpen - 1 WHERE CourseID = ?";
 
         try {
             // Turn off autocommit so the database update can be made using a transaction
@@ -182,6 +184,14 @@ public class MyPlanController {
                 insertPstmt.setInt(2, request.getCourseID());
                 insertPstmt.setString(3, request.getTerm());
                 insertPstmt.setBoolean(4, request.getIsRetaking());
+                insertPstmt.addBatch();
+
+                insertPstmt.executeBatch();
+            }
+
+            // Decrement number of seats open
+            try (PreparedStatement insertPstmt = this.conn.prepareStatement(decrementSeatsOpen)) {
+                insertPstmt.setInt(1, request.getCourseID());
                 insertPstmt.addBatch();
 
                 insertPstmt.executeBatch();
@@ -251,6 +261,8 @@ public class MyPlanController {
 
         // Create query to use with PreparedStatements for efficiency
         String deleteSql = "DELETE FROM PlannedEnrollments WHERE StudentID = ? AND CourseID = ? AND Term = ?";
+        // Create query to add 1 seat to number of seats open in Courses table
+        String incrementSeatsOpen = "UPDATE Courses SET SeatsOpen = SeatsOpen + 1 WHERE CourseID = ?";
 
         try {
             // Turn off autocommit so the database update can be made using a transaction
@@ -262,6 +274,14 @@ public class MyPlanController {
                 insertPstmt.setInt(1, studentID);
                 insertPstmt.setInt(2, request.getCourseID());
                 insertPstmt.setString(3, request.getTerm());
+                insertPstmt.addBatch();
+
+                insertPstmt.executeBatch();
+            }
+
+            // Increment number of seats open
+            try (PreparedStatement insertPstmt = this.conn.prepareStatement(incrementSeatsOpen)) {
+                insertPstmt.setInt(1, request.getCourseID());
                 insertPstmt.addBatch();
 
                 insertPstmt.executeBatch();

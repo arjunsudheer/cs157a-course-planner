@@ -4,7 +4,6 @@ interface CourseInfoProps {
 	courseID: number;
 	courseName: string;
 	professorName: string;
-	seatsOpen: number;
 	term: string;
 	dayOfWeek: string;
 }
@@ -13,7 +12,6 @@ const PlannedCourseInfo = ({
 	courseID,
 	courseName,
 	professorName,
-	seatsOpen,
 	term,
 	dayOfWeek,
 }: CourseInfoProps) => {
@@ -65,7 +63,6 @@ const PlannedCourseInfo = ({
 			<td className='border border-gray-300 px-4 py-2'>{courseName}</td>
 			<td className='border border-gray-300 px-4 py-2'>{courseID}</td>
 			<td className='border border-gray-300 px-4 py-2'>{professorName}</td>
-			<td className='border border-gray-300 px-4 py-2'>{seatsOpen}</td>
 			<td className='border border-gray-300 px-4 py-2'>
 				{term === "All" ? (
 					<select

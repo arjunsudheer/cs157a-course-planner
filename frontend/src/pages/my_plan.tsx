@@ -101,64 +101,64 @@ const MyPlan: React.FC = () => {
 		<div className='container mx-auto p-4'>
 			<h1 className='text-2xl font-bold mb-4 text-center'>My Grades</h1>
 
-			<table className='w-11/12 mx-auto table-auto border border-gray-400 mb-4'>
-				<thead>
-					<tr className='bg-gray-200'>
-						<th className='border border-gray-400 px-4 py-2'>Course Name</th>
-						<th className='border border-gray-400 px-4 py-2'>Course ID</th>
-						<th className='border border-gray-400 px-4 py-2'>Professor</th>
-						<th className='border border-gray-400 px-4 py-2'>Number of Seats Open</th>
-						<th className='border border-gray-400 px-4 py-2'>Term</th>
-						<th className='border border-gray-400 px-4 py-2'>Day Of Week</th>
-						<th className='border border-gray-400 px-4 py-2'>Grade</th>
-					</tr>
-				</thead>
-				<tbody>
-					{gradedCourses.map((course, index) => (
-						<GradedCourseInfo
-							key={index}
-							courseID={course.courseID}
-							courseName={course.courseName}
-							professorName={course.professorName}
-							seatsOpen={course.seatsOpen}
-							term={course.termOffered}
-							dayOfWeek={course.dayOfWeek}
-							grade={course.grade}
-						/>
-					))}
-				</tbody>
-			</table>
+			<div className='w-full overflow-x-auto mb-4'>
+				<table className='min-w-full table-auto border border-gray-400'>
+					<thead>
+						<tr className='bg-gray-200'>
+							<th className='border border-gray-400 px-4 py-2'>Course Name</th>
+							<th className='border border-gray-400 px-4 py-2'>Course ID</th>
+							<th className='border border-gray-400 px-4 py-2'>Professor</th>
+							<th className='border border-gray-400 px-4 py-2'>Term</th>
+							<th className='border border-gray-400 px-4 py-2'>Day Of Week</th>
+							<th className='border border-gray-400 px-4 py-2'>Grade</th>
+						</tr>
+					</thead>
+					<tbody>
+						{gradedCourses.map((course, index) => (
+							<GradedCourseInfo
+								key={index}
+								courseID={course.courseID}
+								courseName={course.courseName}
+								professorName={course.professorName}
+								term={course.termOffered}
+								dayOfWeek={course.dayOfWeek}
+								grade={course.grade}
+							/>
+						))}
+					</tbody>
+				</table>
+			</div>
 
 			<hr />
 			<h1 className='text-2xl font-bold mb-4 text-center pt-4'>My Course Plan</h1>
 
-			<table className='w-11/12 mx-auto table-auto border border-gray-400 mb-4'>
-				<thead>
-					<tr className='bg-gray-200'>
-						<th className='border border-gray-400 px-4 py-2'>Course Name</th>
-						<th className='border border-gray-400 px-4 py-2'>Course ID</th>
-						<th className='border border-gray-400 px-4 py-2'>Professor</th>
-						<th className='border border-gray-400 px-4 py-2'>Number of Seats Open</th>
-						<th className='border border-gray-400 px-4 py-2'>Term</th>
-						<th className='border border-gray-400 px-4 py-2'>Day Offered</th>
-						<th className='border border-gray-400 px-4 py-2'>Remove?</th>
-						<th className='border border-gray-400 px-4 py-2'>Completed?</th>
-					</tr>
-				</thead>
-				<tbody>
-					{plannedCourses.map((course, index) => (
-						<PlannedCourseInfo
-							key={index}
-							courseID={course.courseID}
-							courseName={course.courseName}
-							professorName={course.professorName}
-							seatsOpen={course.seatsOpen}
-							term={course.termOffered}
-							dayOfWeek={course.dayOfWeek}
-						/>
-					))}
-				</tbody>
-			</table>
+			<div className='w-full overflow-x-auto mb-4'>
+				<table className='min-w-full table-auto border border-gray-400'>
+					<thead>
+						<tr className='bg-gray-200'>
+							<th className='border border-gray-400 px-4 py-2'>Course Name</th>
+							<th className='border border-gray-400 px-4 py-2'>Course ID</th>
+							<th className='border border-gray-400 px-4 py-2'>Professor</th>
+							<th className='border border-gray-400 px-4 py-2'>Term</th>
+							<th className='border border-gray-400 px-4 py-2'>Day Offered</th>
+							<th className='border border-gray-400 px-4 py-2'>Remove?</th>
+							<th className='border border-gray-400 px-4 py-2'>Completed?</th>
+						</tr>
+					</thead>
+					<tbody>
+						{plannedCourses.map((course, index) => (
+							<PlannedCourseInfo
+								key={index}
+								courseID={course.courseID}
+								courseName={course.courseName}
+								professorName={course.professorName}
+								term={course.termOffered}
+								dayOfWeek={course.dayOfWeek}
+							/>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 };

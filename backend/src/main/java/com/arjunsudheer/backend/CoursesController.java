@@ -44,8 +44,9 @@ public class CoursesController {
 
         // Used to build the SQL query based on the search/filter inputs from the
         // frontend
+        // Only show courses that have at least 1 seat open
         StringBuilder sqlBuilder = new StringBuilder(
-                "SELECT * FROM Courses WHERE 1=1");
+                "SELECT * FROM Courses WHERE SeatsOpen > 0");
         List<Object> params = new ArrayList<>();
 
         // Filter by the Course Name or Professor if specified

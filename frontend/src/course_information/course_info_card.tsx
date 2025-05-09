@@ -35,6 +35,7 @@ const CourseInfoCard = ({
 				isRetaking,
 			});
 			alert(`Course ${courseID} added to student ${studentID}'s plan.`);
+			window.location.reload();
 		} catch (error) {
 			console.error("Error adding course to plan:", error);
 			alert(
