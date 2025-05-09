@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Footer from "./navigation/footer";
 import Navbar from "./navigation/navbar";
 import AllCourses from "./pages/all_courses";
-import Home from "./home";
+import Home from "./pages/home";
 import MyPlanPage from "./pages/my_plan";
-import AdminPage from "./pages/AdminPage";
+import AdminPage from "./pages/admin";
 
 function App() {
 	return (
