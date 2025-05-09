@@ -59,10 +59,16 @@ sudo service postgresql start
 
 ### Setting up the tables and initial data
 
-The provided create_schema.sql (located in the src directory) will create the required tables and insert some initial data. To run this script, type the following command in your terminal:
+The provided create_schema.sql (located in the src directory) will create the required tables. To run this script, type the following command in your terminal:
 
 ```
 psql -h localhost -p 5432 -U student -d courseplanner -a -f src/create_schema.sql
+```
+
+The provided initialize_data.sql (located in the src directory) will insert some initial data. To run this script, type the following command in your terminal:
+
+```
+psql -h localhost -p 5432 -U student -d courseplanner -a -f src/initialize_data.sql
 ```
 
 To verify that the tables were created, you can enter the psql interactive shell:
@@ -73,7 +79,15 @@ sudo -u postgres psql
 
 To view the tables in the courseplanner database, first select the courseplanner database by typing `\c courseplanner` into the psql interactive shell. Then, type `\dt` to view the tables in the selected courseplanner database.
 
-After verifying that the tables were created, exit the psql interactive shell by typing `\q` into the psql interactive shell.
+To view the rows in a table, you can type the following SQL statement into the psql interactive shell:
+
+```
+SELECT * FROM <tablename>;
+```
+
+Make sure to replace `<tablename>` with the name of the table you want to view the rows for.
+
+After verifying that the tables were created and initial data were inserted, exit the psql interactive shell by typing `\q` into the psql interactive shell.
 
 ### Starting the SpringBoot backend server
 
