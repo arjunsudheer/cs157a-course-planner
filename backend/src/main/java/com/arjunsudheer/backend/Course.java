@@ -21,32 +21,61 @@ public class Course {
         this.daysOfWeek = daysOfWeek;
     }
 
-    // Getters used by Spring Boot to convert to JSON for frontend
+    // Getters and setters used by Spring Boot to serialize and deserialize objects
+    // when sending data to frontend
     public int getCourseID() {
         return courseID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
     }
 
     public String getCourseName() {
         return courseName;
     }
 
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
     public String getProfessorName() {
         return professorName;
+    }
+
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
     }
 
     public int getUnits() {
         return units;
     }
 
+    public void setUnits(int units) {
+        this.units = units;
+    }
+
     public int getSeatsOpen() {
         return seatsOpen;
     }
 
-    public String getTermsOffered() {
+    public void setSeatsOpen(int seatsOpen) {
+        this.seatsOpen = seatsOpen;
+    }
+
+    public String getTermOffered() {
         return termsOffered;
     }
 
-    public String getDaysOfWeek() {
+    public void setTermOffered(String termsOffered) {
+        this.termsOffered = termsOffered;
+    }
+
+    public String getDayOfWeek() {
         return daysOfWeek;
+    }
+
+    public void setDayOfWeek(String daysOfWeek) {
+        this.daysOfWeek = daysOfWeek;
     }
 }
