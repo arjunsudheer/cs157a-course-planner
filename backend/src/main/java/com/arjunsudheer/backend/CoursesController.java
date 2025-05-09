@@ -117,11 +117,11 @@ public class CoursesController {
             return courses; 
         }
 
-        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Courses WHERE 1=1");
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Courses WHERE 1=1"); //trick to make always true
         List<Object> params = new ArrayList<>();
 
         if (nameOrProfessor != null && !nameOrProfessor.isEmpty()) {
-            sqlBuilder.append(" AND (LOWER(CourseName) LIKE LOWER(?) OR LOWER(ProfessorName) LIKE LOWER(?))");
+            sqlBuilder.append(" AND (LOWER(CourseName) LIKE LOWER(?) OR LOWER(ProfessorName) LIKE LOWER(?))"); //adds search for professor and course name (case insensitive)
             String searchQuery = "%" + nameOrProfessor + "%";
             params.add(searchQuery);
             params.add(searchQuery);
@@ -206,7 +206,7 @@ public class CoursesController {
         List<Course> plannedCoursesList = new ArrayList<>();
         String sql = "SELECT c.* FROM Courses c " +
                      "JOIN PlannedEnrollments pe ON c.CourseID = pe.CourseID " +
-                     "WHERE pe.StudentID = ? ORDER BY c.CourseID";
+                     "WHERE pe.StudentID = ? ORDER BY c.CourseID"; //basically join courses and plannedenrollments tables and order by courseid
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
             pstmt.setInt(1, studentId);
@@ -249,7 +249,7 @@ public class CoursesController {
         try {
             this.conn.setAutoCommit(false);
 
-            // 1. Delete existing plan entries for the student so we can cleanly add
+            // 1. delete the existing plan entries for the student so we can cleanly add
             try (PreparedStatement deletePstmt = this.conn.prepareStatement(deleteSql)) {
                 deletePstmt.setInt(1, studentId);
                 deletePstmt.executeUpdate();
