@@ -122,7 +122,7 @@ public class MyPlanController {
         }
     }
 
-    // Class for storing attributes received from frontend when deleting planned
+    // Class for storing attributes received from frontend when adding a planned
     // enrollment class
     static class AddEnrollmentCourseRequest {
         private Integer courseID;
@@ -222,7 +222,7 @@ public class MyPlanController {
         }
     }
 
-    // Class for storing attributes received from frontend when deleting planned
+    // Class for storing attributes received from frontend when deleting a planned
     // enrollment class
     static class RemoveEnrollmentCourseRequest {
         private Integer courseID;
@@ -312,8 +312,7 @@ public class MyPlanController {
         }
     }
 
-    // Class for storing attributes received from frontend when deleting planned
-    // enrollment class
+    // Class for storing attributes received from frontend when adding graded class
     static class AddGradesCourseRequest {
         private Integer courseID;
         private String term;
@@ -346,7 +345,7 @@ public class MyPlanController {
         }
     }
 
-    // Update a student's course plan
+    // Update a student's grades
     @PostMapping("/grades/add/{studentID}")
     public ResponseEntity<String> updateStudentGrades(
             @PathVariable Integer studentID,
