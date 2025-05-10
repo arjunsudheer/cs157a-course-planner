@@ -194,7 +194,7 @@ psql -h localhost -p 5432 -U student -d courseplanner -a -f src/initialize_data.
 To verify that the tables were created, you can enter the psql interactive shell:
 
 ```
-psql -U postgres
+psql postgres
 ```
 
 To view the tables in the courseplanner database, first select the courseplanner database by typing `\c courseplanner` into the psql interactive shell. Then, type `\dt` to view the tables in the selected courseplanner database.
