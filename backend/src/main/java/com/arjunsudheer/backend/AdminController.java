@@ -231,7 +231,7 @@ public class AdminController {
 
         // Check if the ID already exists
         try (PreparedStatement checkStmt = this.conn
-                .prepareStatement("SELECT StudentID FROM Students WHERE (CASE WHEN StudentID LIKE 'S%' THEN substring(StudentID, 2)::integer ELSE StudentID::integer END) = ?")) {
+                .prepareStatement("SELECT StudentID FROM Students WHERE StudentID = ?")) {
             checkStmt.setInt(1, studentData.getStudentID());
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next()) {
