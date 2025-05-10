@@ -45,7 +45,7 @@ BEGIN;
         CourseID INTEGER NOT NULL REFERENCES Courses(CourseID) ON DELETE CASCADE ON UPDATE CASCADE, -- Foreign key to CourseID primary key from Courses table
         -- PostgreSQL regex documentation: https://www.postgresql.org/docs/current/functions-matching.html
         -- Allow terms between 2023 and 2099
-        Term VARCHAR(11) NOT NULL CHECK (Term ~ '^(Fall|Spring|Summer|Winter) (202[3-5])$'),
+        Term VARCHAR(11) NOT NULL CHECK (Term ~ '^(Fall|Spring|Summer|Winter) (202[3-9]|20[3-9][0-9])$'),
         -- Only allow valid A-F grades
         Grade VARCHAR(2) NOT NULL CHECK (Grade IN ('A', 'A+', 'A-', 'B', 'B+', 'B-', 'C', 'C+', 'C-', 'D', 'D+', 'D-', 'F')),
         PRIMARY KEY (StudentID, CourseID, Term) -- Composite primary key
