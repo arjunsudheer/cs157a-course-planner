@@ -181,7 +181,14 @@ cd backend
 The provided create_schema.sql (located in the src directory) will create the required tables and insert some initial data. To run this script, type the following command in your terminal:
 
 ```
-psql -h localhost -U student -d courseplanner -a -f src/create_schema.sql
+psql -h localhost -p 5432 -U student -d courseplanner -a -f src/create_schema.sql
+
+```
+
+The provided initialize_data.sql (located in the src directory) will insert some initial data. To run this script, type the following command in your terminal:
+
+```
+psql -h localhost -p 5432 -U student -d courseplanner -a -f src/initialize_data.sql
 ```
 
 To verify that the tables were created, you can enter the psql interactive shell:
