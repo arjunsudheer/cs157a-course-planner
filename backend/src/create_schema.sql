@@ -23,7 +23,7 @@ BEGIN;
         -- Should be less than 100 and non-negative
         SeatsOpen INTEGER NOT NULL CHECK (SeatsOpen >= 0 AND SeatsOpen <= 100),
         -- Can only be "All", "Spring", "Fall", "Winter", or "Summer"
-        TermOffered VARCHAR(6) NOT NULL CHECK ( TermOffered IN ('All', 'Spring', 'Fall', 'Winter', 'Summer')) ,
+        TermOffered VARCHAR(6) NOT NULL CHECK (TermOffered IN ('All', 'Spring', 'Fall', 'Winter', 'Summer')) ,
         -- Can only be on weekdays
         DayOfWeek VARCHAR(9) NOT NULL CHECK (DayOfWeek IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'))
     );
@@ -50,5 +50,14 @@ BEGIN;
         Grade VARCHAR(2) NOT NULL CHECK (Grade IN ('A', 'A+', 'A-', 'B', 'B+', 'B-', 'C', 'C+', 'C-', 'D', 'D+', 'D-', 'F')),
         PRIMARY KEY (StudentID, CourseID, Term) -- Composite primary key
     );
+
+    -- Give permissions to student user
+    GRANT SELECT ON TABLE Students TO student;
+    GRANT SELECT, INSERT, UPDATE ON TABLE Courses TO student; -- UPDATE for SeatsOpen, INSERT for adding new courses
+    GRANT SELECT, INSERT, DELETE ON TABLE PlannedEnrollments TO student;
+    GRANT SELECT, INSERT ON TABLE Grades TO student;
+
+    GRANT USAGE, SELECT ON SEQUENCE students_studentid_seq TO student;
+    GRANT USAGE, SELECT ON SEQUENCE courses_courseid_seq TO student;
 
 COMMIT;

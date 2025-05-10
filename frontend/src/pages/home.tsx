@@ -24,9 +24,10 @@ const Home = () => {
 
 			// If the studentID exists and is valid, redirect the user
 			if (response.ok) {
-				const data = await response.json();
 				localStorage.setItem("studentID", studentID);
-				localStorage.setItem("isAdmin", data.isAdmin ? "true" : "false");
+				const isAdmin = studentID === "0"; // Determine isAdmin status based on the input studentID
+				localStorage.setItem("isAdmin", isAdmin ? "true" : "false");
+				console.log("we set admin, isAdmin:", isAdmin);
 
 				navigate("/plan");
 			} else {
