@@ -61,7 +61,7 @@ public class CoursesController {
         // Filter by term if provided by the frontend
         if (term != null && !term.isEmpty()) {
             // We want courses that either contain the specific term or are marked as 'all'
-            sqlBuilder.append(" AND (LOWER(TermsOffered) LIKE LOWER(?) OR LOWER(TermsOffered) = LOWER('all'))");
+            sqlBuilder.append(" AND (LOWER(TermOffered) LIKE LOWER(?) OR LOWER(TermOffered) = LOWER('all'))");
             params.add("%" + term + "%");
         }
 
