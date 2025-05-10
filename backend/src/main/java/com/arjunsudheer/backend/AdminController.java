@@ -80,17 +80,21 @@ class CourseData {
 
 // Class for student management
 class StudentData {
-    private String studentID;
+    private Integer studentID;
     private String studentName;
     private String year;
 
     // Getters and setters
-    public String getStudentID() {
+    public Integer getStudentID() {
         return studentID;
     }
 
     public void setStudentID(String studentID) {
-        this.studentID = studentID;
+        try {
+            this.studentID = Integer.parseInt(studentID);
+        } catch (NumberFormatException e) {
+            this.studentID = null;
+        }
     }
 
     public String getStudentName() {
@@ -211,11 +215,8 @@ public class AdminController {
         }
 
         // Validate student data
-        if (studentData.getStudentID() == null || studentData.getStudentID().trim().isEmpty()) {
+        if (studentData.getStudentID() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student ID is required");
-        }
-        if (!studentData.getStudentID().matches("S\\d{3}")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student ID must be in format SXXX (e.g., S001)");
         }
         if (studentData.getStudentName() == null || studentData.getStudentName().trim().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student name is required");
@@ -230,8 +231,8 @@ public class AdminController {
 
         // Check if the ID already exists
         try (PreparedStatement checkStmt = this.conn
-                .prepareStatement("SELECT StudentID FROM Students WHERE StudentID = ?")) {
-            checkStmt.setInt(1, Integer.parseInt(studentData.getStudentID()));
+                .prepareStatement("SELECT StudentID FROM Students WHERE (CASE WHEN StudentID LIKE 'S%' THEN substring(StudentID, 2)::integer ELSE StudentID::integer END) = ?")) {
+            checkStmt.setInt(1, studentData.getStudentID());
             ResultSet rs = checkStmt.executeQuery();
             if (rs.next()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student ID already exists");
@@ -244,7 +245,7 @@ public class AdminController {
         String sql = "INSERT INTO Students (StudentID, StudentName, Year) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
-            pstmt.setInt(1, Integer.parseInt(studentData.getStudentID().trim()));
+            pstmt.setInt(1, studentData.getStudentID());
             pstmt.setString(2, studentData.getStudentName().trim());
             pstmt.setString(3, studentData.getYear().trim());
 
@@ -344,8 +345,8 @@ public class AdminController {
         }
 
         List<Map<String, Object>> students = new ArrayList<>();
-        // Cast StudentID from Integer to String as expected by ILIKE
-        String sql = "SELECT * FROM Students WHERE StudentID::text ILIKE ? OR StudentName ILIKE ? ORDER BY StudentID";
+        // Using explicit type casting with PostgreSQL syntax
+        String sql = "SELECT * FROM Students WHERE StudentID::varchar ILIKE ? OR StudentName ILIKE ? ORDER BY StudentID";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
             String searchPattern = "%" + query.trim() + "%";
@@ -385,8 +386,8 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Search query is required");
         }
 
-        // Cast StudentID from Integer to String as expected by ILIKE
-        String sql = "DELETE FROM Students WHERE StudentID::text ILIKE ? OR StudentName ILIKE ?";
+        // Using explicit type casting with PostgreSQL syntax
+        String sql = "DELETE FROM Students WHERE StudentID::varchar ILIKE ? OR StudentName ILIKE ?";
 
         try (PreparedStatement pstmt = this.conn.prepareStatement(sql)) {
             String searchPattern = "%" + query.trim() + "%";
