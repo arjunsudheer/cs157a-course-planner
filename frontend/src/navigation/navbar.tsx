@@ -91,7 +91,7 @@ const Navbar = () => {
 					<hr className='block md:hidden' />
 				</NavLink>
 				{/* Link to Admin page (only shown for admin users) */}
-				{isAdmin && (
+				{(
 					<NavLink
 						to='/admin'
 						className={({ isActive }) => (isActive ? "font-bold" : "font-normal")}
