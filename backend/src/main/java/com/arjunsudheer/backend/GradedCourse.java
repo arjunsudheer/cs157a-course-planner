@@ -1,7 +1,7 @@
 package com.arjunsudheer.backend;
 
 // Used for packaging the data for each course to send to the frontend
-public class Course {
+public class GradedCourse {
     private int courseID;
     private String courseName;
     private String professorName;
@@ -9,9 +9,10 @@ public class Course {
     private int seatsOpen;
     private String termsOffered;
     private String daysOfWeek;
+    private String grade;
 
-    public Course(int courseID, String courseName, String professorName, int units, int seatsOpen,
-            String termsOffered, String daysOfWeek) {
+    public GradedCourse(int courseID, String courseName, String professorName, int units, int seatsOpen,
+            String termsOffered, String daysOfWeek, String grade) {
         this.courseID = courseID;
         this.courseName = courseName;
         this.professorName = professorName;
@@ -19,6 +20,7 @@ public class Course {
         this.seatsOpen = seatsOpen;
         this.termsOffered = termsOffered;
         this.daysOfWeek = daysOfWeek;
+        this.grade = grade;
     }
 
     // Getters and setters used by Spring Boot to serialize and deserialize objects
@@ -77,5 +79,13 @@ public class Course {
 
     public void setDayOfWeek(String daysOfWeek) {
         this.daysOfWeek = daysOfWeek;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

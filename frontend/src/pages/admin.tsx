@@ -105,14 +105,18 @@ const AdminPage: React.FC = () => {
     e.preventDefault();
     
     // Validate student ID format
-    if (!newStudent.studentID.match(/^S\d{3}$/)) {
-      alert("Student ID must be in format SXXX (e.g., S001)");
+    if (!/^\d+$/.test(newStudent.studentID)) {
+      alert("Student ID must be a number");
       return;
     }
 
     try {
       const studentID = localStorage.getItem("studentID");
-      const response = await axios.post(`http://localhost:8080/api/admin/students?studentID=${studentID}`, newStudent);
+      const studentData = {
+        ...newStudent,
+        studentID: parseInt(newStudent.studentID, 10)
+      };
+      const response = await axios.post(`http://localhost:8080/api/admin/students?studentID=${studentID}`, studentData);
       if (response.data.status === "success") {
         setNewStudent({
           studentID: "",
@@ -338,20 +342,20 @@ const AdminPage: React.FC = () => {
             <div>
               <input
                 type="text"
-                placeholder="Student ID (SXXX)"
+                placeholder="Student ID"
                 value={newStudent.studentID}
                 onChange={(e) => {
-                  const value = e.target.value.toUpperCase();
-                  if (value === "" || /^S\d{0,3}$/.test(value)) {
+                  const value = e.target.value;
+                  if (value === "" || /^\d*$/.test(value)) {
                     setNewStudent({ ...newStudent, studentID: value });
                   }
                 }}
                 className="border p-2 rounded w-full"
                 required
-                pattern="S\d{3}"
-                title="Student ID must be in format SXXX (e.g., S001)"
+                pattern="\d+"
+                title="Student ID must be a number"
               />
-              <p className="text-sm text-gray-500 mt-1">Format: SXXX (e.g., S001)</p>
+              <p className="text-sm text-gray-500 mt-1">Enter a number (e.g., 1, 2, 3)</p>
             </div>
             <input
               type="text"
