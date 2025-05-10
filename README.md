@@ -129,7 +129,7 @@ brew install postgresql
 Start the PostgreSQL service:
 
 ```
-brew services start postgresql@
+brew services start postgresql
 ```
 
 or
